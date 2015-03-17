@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "ports": {
+    "proxy": "1",
+    "webserver": "2",
+    "forums": "3",
+    "shows": "4"
+  }
+}
