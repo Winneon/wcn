@@ -1,0 +1,49 @@
+- var nav      = {}
+- nav["news"]  = "/news/"
+- nav["rules"] = "/rules/"
+- nav["utils"] = "javascript:void(0)"
+- nav["about"] = "/about/"
+
+- var dropdowns                    = {}
+- dropdowns["utils"]               = {}
+- dropdowns["utils"]["alliances"]  = "/utils/alliances/"
+- dropdowns["utils"]["calendar"]   = "/utils/calendar/"
+- dropdowns["utils"]["djrequest"]  = "/utils/dj/"
+- dropdowns["utils"]["forums"]     = "http://forums.worldscolli.de/"
+- dropdowns["utils"]["markkit"]    = "/utils/markkit/"
+- dropdowns["utils"]["ranks"]      = "/utils/ranks/"
+- dropdowns["utils"]["shows.js"]   = "http://shows.worldscolli.de/"
+- dropdowns["utils"]["staff"]      = "/utils/staff/"
+- dropdowns["utils"]["teamspeak"]  = "/utils/ts/"
+
+nav
+	ul.nav
+		li.logo
+			a(href="/") Worlds Collide Network
+		if user
+			li.user.logged_in
+				a(href="javascript:void(0)")= user
+				ul.drop(style="width: 100%;")
+					li
+						a(href="/settings/") Settings
+					li
+						a.logout(href="javascript:void(0)") Logout
+		else
+			li.user
+				a(href="/login/") Login / Register
+		each link, text in nav
+			li
+				- var clazz = ""
+				- var temp = text
+				if url == link || (url == "/" && link == "/index") || (url.indexOf("/utils/") == 0 && link.indexOf("javascript:") == 0)
+					- clazz = "selected"
+					if (url.indexOf("/utils/") == 0 && link.indexOf("javascript:") == 0)
+						each link, desc in dropdowns[text]
+							if url == link
+								- temp = desc
+				a(class=clazz, href=link)= temp
+				if dropdowns[text]
+					ul.drop
+						each link, desc in dropdowns[text]
+							li
+								a(href=link)= desc

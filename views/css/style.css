@@ -1,0 +1,315 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+ul {
+	margin: inherit;
+}
+
+li {
+	margin: 0px 20px;
+}
+
+body {
+	background: url("/img/bg.jpg") no-repeat center center fixed;
+	color: #2D2D2D;
+	font-family: "Raleway", sans-serif;
+}
+
+a {
+	text-decoration: none;
+	color: #848484;
+}
+
+h1 {
+	background-color: #2D2D2D;
+	padding: 7px 15px;
+	color: #FFFFFF;
+	font-size: 20px;
+	text-transform: uppercase;
+}
+
+p {
+	padding: 5px 0px;
+}
+
+h1:first-of-type {
+	border-radius: 2px 2px 0px 0px;
+}
+
+ul.nav,
+ul.drop,
+div.wrap,
+div.wrap button {
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+nav {
+	background-color: #FFFFFF;
+	box-sizing: border-box;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	font-weight: 800;
+	font-size: 18px;
+	text-align: center;
+	text-transform: uppercase;
+	z-index: 100;
+}
+
+nav a {
+	color: inherit;
+}
+
+ul.nav {
+	list-style-type: none;
+}
+
+ul.nav > li {
+	display: inline-block;
+	margin: 0px;
+}
+
+ul.nav > li.logo,
+ul.nav > li.user {
+	position: absolute;
+}
+
+ul.nav > li.logo {
+	left: 20px;
+}
+
+ul.nav > li.user {
+	right: 20px;
+}
+
+ul.nav > li:hover > ul.drop {
+	display: block;
+}
+
+ul.nav > li > ul.drop.disable {
+	display: none;
+}
+
+ul.nav > li > a {
+	position: relative;
+	display: inline-block;
+	border-top: 5px solid #FFFFFF;
+	border-bottom: 5px solid #FFFFFF;
+	min-width: 100px;
+	padding: 7px 20px;
+	-webkit-transition: border-bottom .1s ease;
+	-moz-transition: border-bottom .1s ease;
+	-ms-transition: border-bottom .1s ease;
+	-o-transition: border-bottom .1s ease;
+	transition: border-bottom .1s ease;
+}
+
+ul.nav > li > a:hover {
+	border-bottom: 5px solid #848484;
+}
+
+ul.drop {
+	display: none;
+	background-color: #FFFFFF;
+	position: absolute;
+	width: 200px;
+	list-style-type: none;
+	text-align: left;
+	z-index: -1;
+}
+
+ul.drop > li {
+	display: block;
+	margin: 0px;
+	padding: 7px 15px;
+}
+
+ul.drop > li:hover {
+	background-color: #2D2D2D;
+	color: #FFFFFF;
+}
+
+ul.drop > li > a {
+	display: block;
+	position: relative;
+}
+
+ul.drop > li:hover > a {
+	left: 10px;
+}
+
+div.wrap {
+	background-color: #FFFFFF;
+	box-sizing: border-box;
+	border-radius: 2px 2px 0px 0px;
+	position: relative;
+	top: 15px;
+	width: 800px;
+	margin: 70px auto 0px auto;
+	opacity: 0;
+	-webkit-animation: page 2s linear forwards;
+	-moz-animation: page 2s linear forwards;
+	-ms-animation: page 2s linear forwards;
+	-o-animation: page 2s linear forwards;
+	animation: page 2s linear forwards;
+}
+
+div.wrap *:first-child {
+	margin-top: 0px;
+}
+
+div.wrap *:last-child {
+	margin-bottom: 0px;
+}
+
+div.wrap div.block {
+	padding: 25px 35px;
+}
+
+div.wrap ul {
+	padding: 15px 0px;
+	list-style-type: none;
+}
+
+div.wrap ul > li {
+	background-color: #F4F4F4;
+	border-top: 1px solid #ECECEC;
+	border-bottom: 1px solid #ECECEC;
+	margin: 7px 0px;
+	padding: 15px 20px;
+	-webkit-transition: background-color .2s ease, border-color .2s ease;
+	-moz-transition: background-color .2s ease, border-color .2s ease;
+	-ms-transition: background-color .2s ease, border-color .2s ease;
+	-o-transition: background-color .2s ease, border-color .2s ease;
+	transition: background-color .2s ease, border-color .2s ease;
+}
+
+div.wrap ul > li:hover {
+	background-color: #E0E0E0;
+	border-color: #BABABA;
+}
+
+div.wrap input {
+	display: block;
+	border: none;
+	border-bottom: 1px solid #2D2D2D;
+	width: 100%;
+	padding: 15px 0px;
+	margin: 10px 0px 0px 0px;
+	font-family: "Raleway", sans-serif;
+	font-size: 1rem;
+	-webkit-transition: border-color .1s ease, box-shadow .1s ease;
+	-moz-transition: border-color .1s ease, box-shadow .1s ease;
+	-ms-transition: border-color .1s ease, box-shadow .1s ease;
+	-o-transition: border-color .1s ease, box-shadow .1s ease;
+	transition: border-color .1s ease, box-shadow .1s ease;
+}
+
+div.wrap input:focus {
+	outline: none;
+	border-color: #00DA03;
+	box-shadow: 0px 1px 0px #00DA03;
+}
+
+div.wrap button {
+	display: inline-block;
+	background-color: #42C357;
+	border: none;
+	border-radius: 2px;
+	margin: 20px 20px 0px 0px;
+	padding: 10px 55px;
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.16), 0px 2px 10px 0px rgba(0, 0, 0, 0.12);
+	color: #FFFFFF;
+	font-family: "Raleway", sans-serif;
+	font-size: 18px;
+	font-weight: 700;
+	text-transform: uppercase;
+	cursor: pointer;
+	-webkit-transition: background-color .2s ease, box-shadow .2s ease;
+	-moz-transition: background-color .2s ease, box-shadow .2s ease;
+	-ms-transition: background-color .2s ease, box-shadow .2s ease;
+	-o-transition: background-color .2s ease, box-shadow .2s ease;
+	transition: background-color .2s ease, box-shadow .2s ease;
+}
+
+div.wrap button:hover {
+	background-color: #42D059;
+	box-shadow: 0px 5px 11px 0px rgba(0, 0, 0, 0.18), 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+}
+
+div.wrap button:focus {
+	outline: none;
+}
+
+@-webkit-keyframes page {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		top: 15px;
+		opacity: 0;
+	}
+	100% {
+		top: 0px;
+		opacity: 1;
+	}
+}
+
+@-moz-keyframes page {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		top: 15px;
+		opacity: 0;
+	}
+	100% {
+		top: 0px;
+		opacity: 1;
+	}
+}
+
+@-ms-keyframes page {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		top: 15px;
+		opacity: 0;
+	}
+	100% {
+		top: 0px;
+		opacity: 1;
+	}
+}
+
+@-o-keyframes page {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		top: 15px;
+		opacity: 0;
+	}
+	100% {
+		top: 0px;
+		opacity: 1;
+	}
+}
+
+@keyframes page {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		top: 15px;
+		opacity: 0;
+	}
+	100% {
+		top: 0px;
+		opacity: 1;
+	}
+}

@@ -1,0 +1,16 @@
+html
+	head
+		title WCN
+		link(rel="stylesheet", type="text/css", href="//fonts.googleapis.com/css?family=Raleway:400,700,800")
+		link(rel="stylesheet", type="text/css", href="/css/style.css")
+		block css
+	body
+		include /nav
+		div.wrap
+			div.page
+				div.content
+					block content
+		script(type="text/javascript", src="/js/modernizr.js")
+		script(type="text/javascript", src="/js/socket.io.js")
+		script.jquery(type="text/javascript", src="/js/jquery.js")
+		script.main(type="text/javascript", src="/js/script.js")
