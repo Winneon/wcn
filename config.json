@@ -1,6 +1,7 @@
 {
   "version": "1.0",
   "encryption": "putsomethinghere",
+  "check": "blah",
   "ports": {
     "server": "80"
   }

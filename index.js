@@ -81,6 +81,9 @@ router.post("/api/register_code/", function(req, res){
 					code: req.body.id,
 					staff: req.body.staff
 				});
+				console.log("NEW CODE REGISTERED");
+				console.log("- USERNAME: " + data.name);
+				console.log("- CODE: " + req.body.id);
 				res.json({
 					success: true
 				});
