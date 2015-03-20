@@ -3,6 +3,8 @@ html
 		title WCN
 		link(rel="stylesheet", type="text/css", href="//fonts.googleapis.com/css?family=Raleway:400,700,800")
 		link(rel="stylesheet", type="text/css", href="/css/style.css")
+		link(rel="stylesheet", type="text/css", href="/css/pace.css")
+		script(type="text/javascript", src="/js/pace.min.js")
 		block css
 	body
 		include /nav
@@ -12,5 +14,5 @@ html
 					block content
 		script(type="text/javascript", src="/js/modernizr.js")
 		script(type="text/javascript", src="/js/socket.io.js")
-		script.jquery(type="text/javascript", src="/js/jquery.js")
-		script.main(type="text/javascript", src="/js/script.js")
+		script(type="text/javascript", src="/js/jquery.js")
+		script(type="text/javascript", src="/js/script.js")

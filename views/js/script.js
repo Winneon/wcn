@@ -1,4 +1,4 @@
-var socket = io.connect("http://local.winneon.moe"),
+var socket = io.connect(window.location.origin),
     $content,
 	$wrap,
 	$height;
@@ -8,7 +8,7 @@ $(document).ready(function(){
 	$height  = 0;
 
 	setTimeout(function(){
-		set_heights(false);
+		set_heights();
 	}, 1000);
 
 	$(function(){
@@ -51,12 +51,54 @@ $(document).ready(function(){
 		window.location.assign(location);
 	});
 
+	socket.on("dynamic_redirect", function(location){
+		location = "/" + location + "/";
+		history.pushState(null, null, location);
+		dynamic_load(location);
+	});
+
 	socket.on("login_fail", function(){
 		alert("Login failed.");
 	});
 
 	socket.on("register_fail", function(){
 		alert("Register failed.");
+	});
+
+	socket.on("dj_queue", function(data){
+		console.log(data);
+	});
+
+	socket.on("dj_add", function(success){
+		if (!success){
+			var $input = $("input[name='add_song'");
+			$input.css("border-color", "#DA2B2B");
+			$input.css("box-shadow", "0px 1px 0px #DA2B2B");
+			$input.prop("disabled", false);
+			setTimeout(function(){
+				$input.attr("style", "");
+			}, 2000);
+		}
+	});
+
+	socket.on("dj_remove", function(success){
+		if (!success){
+			var $button = $("button[name='remove_song'");
+			$button.css("background-color", "#DA2B2B");
+			setTimeout(function(){
+				$button.attr("style", "");
+			}, 2000);
+		}
+	});
+
+	socket.on("dj_veto", function(success){
+		if (!success){
+			var $button = $("button[name='veto_song'");
+			$button.css("background-color", "#DA2B2B");
+			setTimeout(function(){
+				$button.attr("style", "");
+			}, 2000);
+		}
 	});
 
 	function dynamic_load(href){
@@ -68,6 +110,7 @@ $(document).ready(function(){
 				$content.fadeIn(200, function(){
 					unregister_events();
 					register_events();
+					$("a.edit").attr("href", "/edit" + window.location.pathname);
 				});
 			});
 		});
@@ -75,7 +118,7 @@ $(document).ready(function(){
 });
 
 function register_events(){
-	$("div.wrap button").on("click", function(){
+	$("div.wrap button").on("click", function(event){
 		var name = $(this).attr("name");
 		if (name == "login" || name == "register"){
 			var $username = $("input[name='username']"),
@@ -115,15 +158,62 @@ function register_events(){
 				}, 2000);
 			}
 		}
+		switch (name){
+			case "edit":
+				var text = $("textarea").val();
+				var url = window.location.pathname.substring(0, window.location.pathname.length - 1).replace("/edit/", "");
+				if (url == "/edit"){
+					url = "index";
+				}
+				socket.emit("edit", {
+					url: url,
+					text: text
+				});
+				break;
+			case "remove_song":
+				socket.emit("dj_remove");
+				break;
+			case "veto_song":
+				socket.emit("dj_veto");
+				break;
+		}
 		return false;
 	});
+	$("div.wrap input").on("keydown", function(event){
+		var name = $(this).attr("name");
+		if (event.which == 13){
+			if (name == "username" || name == "password"){
+				$("button[name='login']").trigger("click");
+			}
+			switch (name){
+				case "add_song":
+					socket.emit("dj_add", $(this).val());
+					$(this).val("");
+					$(this).prop("disabled", true);
+					break;
+			}
+			return false;
+		}
+	});
+	var add_input = document.getElementsByTagName("input");
+	for (var i = 0; i < add_input.length; i++){
+		if (add_input[i].name == "add_song"){
+			add_input[i].onpaste = function(event){
+				var clipboard = event.clipboardData.getData("text/plain");
+				socket.emit("dj_add", clipboard);
+				$(this).prop("disabled", true);
+				return false;
+			};
+		}
+	}
 }
 
 function unregister_events(){
 	$("div.wrap button").off();
+	$("div.wrap input").off();
 }
 
-function set_heights(animate){
+function set_heights(){
 	$wrap.attr("style", "");
 	$wrap.height($wrap.height());
 	$height = $wrap.outerHeight() - $content.height();

@@ -1,12 +1,18 @@
 {
 	"codes": {
-		"blah": "Winneon"
+		"blah": "Winneon",
+		"6755f5": "Hugh_Jasses"
 	},
 	"data": {
 		"Winneon": {
 			"staff": true,
 			"playlist": [],
 			"password": "70534f5e139dc264106c20e28df7c68f"
+		},
+		"Hugh_Jasses": {
+			"staff": true,
+			"playlist": [],
+			"password": "c00a7cd8c76a50bec4dfa2c4dae9628e"
 		}
 	}
 }

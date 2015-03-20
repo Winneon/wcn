@@ -2,6 +2,8 @@
   "version": "1.0",
   "encryption": "putsomethinghere",
   "check": "blah",
+  "yt_key": "random_key",
+  "sc_key": "random_key",
   "ports": {
     "server": "80"
   }

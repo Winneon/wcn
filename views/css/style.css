@@ -214,6 +214,11 @@ div.wrap input:focus {
 	box-shadow: 0px 1px 0px #00DA03;
 }
 
+div.wrap input:disabled {
+	background-color: inherit;
+	border-color: #E0E0E0;
+}
+
 div.wrap button {
 	display: inline-block;
 	background-color: #42C357;
@@ -242,6 +247,59 @@ div.wrap button:hover {
 
 div.wrap button:focus {
 	outline: none;
+}
+
+div.wrap textarea {
+	background-color: #F0F0F0;
+	border: none;
+	width: 100%;
+	height: 500px;
+	padding: 20px;
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.16), 0px 2px 10px 0px rgba(0, 0, 0, 0.12);
+	resize: none;
+	color: #2D2D2D;
+	-webkit-transition: box-shadow .2s ease;
+	-moz-transition: box-shadow .2s ease;
+	-ms-transition: box-shadow .2s ease;
+	-o-transition: box-shadow .2s ease;
+	transition: box-shadow .2s ease;
+}
+
+div.wrap textarea:hover,
+div.wrap textarea:focus {
+	outline: none;
+	box-shadow: 0px 5px 11px 0px rgba(0, 0, 0, 0.18), 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+}
+
+div.wrap table {
+	border-spacing: 0px;
+	width: 100%;
+	margin-top: 20px;
+}
+
+div.wrap table tr td {
+	border-top: 1px solid #E0E0E0;
+	box-sizing: border-box;
+	vertical-align: top;
+	width: 20%;
+	padding: 10px 20px;
+}
+
+div.wrap table tr:first-of-type td {
+	border-top: none;
+}
+
+div.wrap table.first + table {
+	margin-top: 0px;
+}
+
+div.wrap table.first {
+	background-color: #42C357;
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.16), 0px 2px 10px 0px rgba(0, 0, 0, 0.12);
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: 700;
+	text-transform: uppercase;
 }
 
 @-webkit-keyframes page {

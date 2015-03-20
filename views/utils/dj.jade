@@ -1,0 +1,48 @@
+extends /core
+block content
+	h1 dJRequest
+	div.block
+		input(type="text", name="add_song", placeholder="Paste a YouTube / SoundCloud link here.")
+		table.first
+			tr
+				td(style="width: 60px; text-align: right;") #
+				td(style="width: 405px;") Title
+				td(style="width: 150px;") Submitter
+				td(style="width: 105px; text-align: right;") Time
+		table.dj
+			- var i = 1
+			while i <= 10
+				tr
+					td(style="width: 60px; text-align: right;")= i++
+					td(style="width: 405px;") -
+					td(style="width: 150px;") -
+					td(style="width: 105px; text-align: right;") 00:00
+		button(type="submit", name="remove_song") Remove
+		if staff
+			button(type="submit", name="veto_song") Veto
+	h1 External dJ Clients
+	ul
+		li
+			a(href="https://chrome.google.com/webstore/detail/djrequest/abjgbkaefnanbogdhgngagdicmlmpibm") Chrome // DJRequest 
+			| - by 
+			a(href="/user/msnijder30") msnijder30
+		li
+			a(href="https://chrome.google.com/webstore/detail/djchrome/pddpajoofhffhohlagfinkckdffhpbbg") Chrome // dJChrome 
+			| - by 
+			a(href="/user/Winneon") Winneon
+		li
+			a(href="http://worldscolli.de/dJFacade/dJFacade2.zip") Desktop (Java) // dJFacade2 
+			| - by 
+			a(href="/user/Hugh_Jasses") Hugh_Jasses
+	style(type="text/css").
+		table.first,
+		table.dj,
+		tr {
+			display: block;
+			width: 100%;
+		}
+		
+		td {
+			display: inline-block;
+		}
+		

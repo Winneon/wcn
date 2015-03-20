@@ -27,6 +27,8 @@ nav
 					li
 						a(href="/settings/") Settings
 					li
+						a.edit(href="/edit" + url) Edit Page
+					li
 						a.logout(href="javascript:void(0)") Logout
 		else
 			li.user
@@ -35,12 +37,6 @@ nav
 			li
 				- var clazz = ""
 				- var temp = text
-				if url == link || (url == "/" && link == "/index") || (url.indexOf("/utils/") == 0 && link.indexOf("javascript:") == 0)
-					- clazz = "selected"
-					if (url.indexOf("/utils/") == 0 && link.indexOf("javascript:") == 0)
-						each link, desc in dropdowns[text]
-							if url == link
-								- temp = desc
 				a(class=clazz, href=link)= temp
 				if dropdowns[text]
 					ul.drop

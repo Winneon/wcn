@@ -7,10 +7,12 @@ const express  = require("express"),
       socketio = require("socket.io"),
       path     = require("path"),
       fs       = require("fs"),
-      request  = require("request");
+      request  = require("request"),
+      marked   = require("marked");
 
 const utils    = require("./utils.js"),
       users    = require("./users.js"),
+      dj       = require("./dj.js")(users),
       config   = require("./config.json"),
       welcome  = "WCN // VERSION " + config.version;
 
@@ -46,6 +48,7 @@ app.use(parser.json());
 app.use(cookie());
 
 router.use(function(req, res, next){
+	utils.set_headers(res);
 	if (req.cookies.user && users.get_user(req.cookies.user)){
 		res.clearCookie("user");
 		res.redirect("/login/");
@@ -69,6 +72,7 @@ router.use(function(req, res, next){
 });
 
 router.post("/api/register_code/", function(req, res){
+	console.log("test");
 	if (req.body.check == config.check){
 		req.body.uuid = req.body.uuid.replace(/-/g, "");
 		request({
@@ -101,12 +105,25 @@ router.post("/api/register_code/", function(req, res){
 	}
 });
 
+// dJ GET and POST requests
+
+router.get("/api/dj/queue/", function(req, res){
+	if (users.get_user(req.body.client_id)){
+
+	}
+});
+
 app.use(router);
 
 app.use(function(req, res, next){
 	res.locals.basedir = app.get("views");
 	res.locals.url     = req.url.split("?")[0];
 	res.locals.user    = req.cookies.user;
+	if (req.cookies.user){
+		res.locals.staff = users.get_user(req.cookies.user).staff;
+	} else {
+		res.locals.staff = false;
+	}
 	next();
 });
 
@@ -121,17 +138,36 @@ app.get("*", function(req, res){
 	file = file.replace("/", "");
 	if (fs.existsSync(path.join("views", file))){
 		res.end();
-	} else if (fs.existsSync(path.join("views", file + ".jade"))){
-		res.render(file, function(err, html){
-			if (err){
-				console.log(err);
-				res.redirect("/error/");
-			} else {
-				res.end(html);
-			}
-		});
 	} else {
-		res.redirect("/404/");
+		var cont = false;
+		if (file.indexOf("edit") == 0){
+			if (file == "edit"){
+				file = "edit/index"
+			}
+			var editing  = file.replace("edit/", ""),
+			    contents = "";
+			if (fs.existsSync(path.join("views", editing + ".jade"))){
+				res.locals.contents = fs.readFileSync(path.join("views", editing + ".jade"), {
+					encoding: "utf8"
+				}).replace(/\r/g, "").replace("extends /core\nblock content\n", "").replace("\t", "").replace(/\n\t/g, "\n");
+			}
+			file = "edit";
+			cont = true;
+		} else if (fs.existsSync(path.join("views", file + ".jade"))){
+			cont = true;
+		} else {
+			res.redirect("/404/");
+		}
+		if (cont){
+			res.render(file, function(err, html){
+				if (err){
+					console.log(err);
+					res.redirect("/error/");
+				} else {
+					res.end(html);
+				}
+			});
+		}
 	}
 });
 
@@ -139,11 +175,10 @@ io.on("connection", function(socket){
 	socket.ip = socket.request.socket.remoteAddress;
 	socket.user = socket.handshake.headers.cookie;
 	console.log("NEW CONNECTION: " + socket.ip);
-	if (socket.user.indexOf("user=") > -1){
+	// Dank cookie parsing
+	if (socket.user && socket.user.indexOf("user=") > -1){
 		socket.user = users.decrypt(socket.user.substring(socket.user.indexOf("user="), socket.user.length).replace("user=", ""));
 		console.log("- USERNAME: " + socket.user);
-	} else {
-		socket.user = undefined;
 	}
 	socket.on("disconnect", function(){
 		console.log("CLOSED CONNECTION: " + socket.ip);
@@ -173,11 +208,45 @@ io.on("connection", function(socket){
 			socket.emit("register_fail");
 		}
 	});
+	socket.on("edit", function(data){
+		if (socket.user && users.get_user(socket.user).staff){
+			data.text = "extends /core\nblock content\n\t" + data.text.replace(/\n/g, "\n\t");
+			fs.writeFileSync(path.join("views", data.url + ".jade"), data.text);
+			socket.emit("dynamic_redirect", data.url);
+			console.log("EDITED PAGE: " + socket.user);
+			console.log("- /" + data.url + ".jade");
+		}
+	});
+	socket.on("dj_queue", function(){
+		if (socket.user){
+			dj.send_queue(socket);
+		}
+	});
+	socket.on("dj_add", function(link){
+		if (socket.user){
+			dj.add_song(socket, link);
+		}
+	});
+	socket.on("dj_remove", function(){
+		if (socket.user){
+			dj.remove_song(socket);
+		}
+	});
+	socket.on("dj_veto", function(){
+		if (socket.user){
+			if (users.get_user(socket.user).staff){
+				dj.veto_song(socket);
+			} else {
+				socket.emit("dj_veto", false);
+			}
+		}
+	});
 });
 
 http.listen(config.ports.server, function(){
 	console.log("- WEBSERVER: SUCCESS");
 	console.log("- SOCKET.IO: SUCCESS");
+	console.log("- DJREQUEST: SUCCESS");
 });
 
 process.stdin.resume();
