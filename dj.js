@@ -5,11 +5,11 @@ var queue   = require("./queue.js"),
     config  = require("./config.json");
 
 function dJ(users, io){
-	this.send_queue = function(socket){
+	this.send_queue = function(){
 		utils.get_sockets(io).forEach(function(sock){
 			sock.emit("dj_queue", {
 				queue: queue.list,
-				playlist: users.get_user(socket.user).playlist
+				playlist: users.get_user(sock.user).playlist
 			});
 		});
 	};
@@ -36,7 +36,7 @@ function dJ(users, io){
 				queue.rem_request(socket.user);
 			}
 			socket.emit("dj_remove", true);
-			this.send_queue(socket);
+			this.send_queue();
 			console.log("DJ: REMOVED REQUEST");
 			console.log("- USERNAME: " + socket.user);
 		} else {
@@ -155,7 +155,7 @@ function dJ(users, io){
 				}
 				queue.add_request(title, permalink, duration, socket.user, thumb);
 				socket.emit("dj_add", true);
-				this.send_queue(socket);
+				this.send_queue();
 				console.log("DJ: NEW REQUEST");
 				console.log("- USERNAME: " + socket.user);
 			}
@@ -163,6 +163,8 @@ function dJ(users, io){
 			socket.emit("dj_add", false);
 		}
 	}
+
+	var that = this;
 
 	setInterval(function(){
 		if (!queue.playing){
@@ -172,6 +174,7 @@ function dJ(users, io){
 				queue.timeout = setTimeout(function(){
 					queue.kill();
 				}, (queue.list[0].duration + 15) * 1000);
+				this.send_queue();
 			}
 		} else if (queue.list.length == 0){
 			queue.playing = false;

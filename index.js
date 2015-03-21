@@ -219,7 +219,7 @@ io.on("connection", function(socket){
 	});
 	socket.on("dj_queue", function(){
 		if (socket.user){
-			dj.send_queue(socket);
+			dj.send_queue();
 		}
 	});
 	socket.on("dj_add", function(link){
