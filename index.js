@@ -187,6 +187,8 @@ io.on("connection", function(socket){
 		}
 		socket.user = users.decrypt(parsed);
 		console.log("- USERNAME: " + socket.user);
+	} else {
+		socket.user = undefined;
 	}
 	socket.on("disconnect", function(){
 		console.log("CLOSED CONNECTION: " + socket.ip);
