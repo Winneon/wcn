@@ -174,10 +174,8 @@ app.get("*", function(req, res){
 io.on("connection", function(socket){
 	socket.ip = socket.request.socket.remoteAddress;
 	socket.user = socket.handshake.headers.cookie;
-	if (socket.handshake.url[socket.handshake.url.length - 1] != "/"){
-		console.log(socket.handshake);
-		console.log(socket.handshake.url[socket.handshake.url.length - 1]);
-		socket.emit("redirect", socket.handshake.url + "/");
+	if (socket.handshake.headers.referer[socket.handshake.headers.referer - 1] != "/"){
+		socket.emit("redirect", socket.handshake.headers.referer + "/");
 		return;
 	}
 	console.log("NEW CONNECTION: " + socket.ip);
