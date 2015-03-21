@@ -174,7 +174,7 @@ app.get("*", function(req, res){
 io.on("connection", function(socket){
 	socket.ip = socket.request.socket.remoteAddress;
 	socket.user = socket.handshake.headers.cookie;
-	if (socket.handshake.headers.referer[socket.handshake.headers.referer - 1] != "/"){
+	if (socket.handshake.headers.referer[socket.handshake.headers.referer.length - 1] != "/"){
 		socket.emit("redirect", socket.handshake.headers.referer + "/");
 		return;
 	}
