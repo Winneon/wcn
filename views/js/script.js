@@ -66,7 +66,46 @@ $(document).ready(function(){
 	});
 
 	socket.on("dj_queue", function(data){
-		console.log(data);
+		var disabled = false;
+		var children = $("table.dj tbody").children();
+		for (var i = 0; i < 10; i++){
+			var row      = $(children[i]).children(),
+			    name     = $(row[1]),
+			    username = $(row[2]),
+			    duration = $(row[3]);
+			if (queue[i]){
+				name.html($("<a/>", {
+					"href": queue[i].link,
+					"target": "_blank"
+				}).html(queue[i].title));
+				username.html(queue[i].user);
+				var mins  = Math.floor(queue[i].duration / 60),
+				    hours = queue[i].duration / 60 / 60;
+				    secs  = queue[i].duration % 60,
+				    full  = "";
+				if (secs < 10){
+					secs = "0" + secs;
+				}
+				if (hours >= 1){
+					full += hours + ":";
+				}
+				duration.html(full + [mins, secs].join(":"));
+				if (queue[i].user == user){
+					disabled = true;
+				}
+			} else {
+				if (name.html() != "-"){
+					name.html("-");
+				}
+				if (username.html() != ""){
+					username.html("-");
+				}
+				if (duration.html() != "00:00"){
+					duration.html("00:00");
+				}
+			}
+		}
+		$("input[name='add_song']").prop("disabled", disabled);
 	});
 
 	socket.on("dj_add", function(success){
@@ -88,6 +127,8 @@ $(document).ready(function(){
 			setTimeout(function(){
 				$button.attr("style", "");
 			}, 2000);
+		} else {
+			$(this).prop("true", true);
 		}
 	});
 

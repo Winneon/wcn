@@ -34,6 +34,7 @@ function dJ(users){
 				queue.rem_request(socket.user);
 			}
 			socket.emit("dj_remove", true);
+			this.send_queue(socket);
 			console.log("DJ: REMOVED REQUEST");
 			console.log("- USERNAME: " + socket.user);
 		} else {
@@ -151,9 +152,10 @@ function dJ(users){
 					}
 				}
 				queue.add_request(title, permalink, duration, socket.user, thumb);
+				socket.emit("dj_add", true);
+				this.send_queue(socket);
 				console.log("DJ: NEW REQUEST");
 				console.log("- USERNAME: " + socket.user);
-				socket.emit("dj_add", true);
 			}
 		} else {
 			socket.emit("dj_add", false);
