@@ -43,6 +43,18 @@ function Utils(){
 		
 		return child;
 	};
+
+	this.get_sockets = function(io){
+		var res = [],
+		    ns  = io.of("/");
+
+		if (ns){
+			for (var id in ns.connected){
+				res.push(ns.connected[id]);
+			}
+		}
+		return res;
+	};
 }
 
 module.exports = new Utils();

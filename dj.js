@@ -6,7 +6,7 @@ var queue   = require("./queue.js"),
 
 function dJ(users, io){
 	this.send_queue = function(socket){
-		io.sockets.clients().forEach(function(sock){
+		utils.get_sockets(io).forEach(function(sock){
 			sock.emit("dj_queue", {
 				queue: queue.list,
 				playlist: users.get_user(socket.user).playlist
