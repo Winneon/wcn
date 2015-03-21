@@ -174,7 +174,7 @@ function dJ(users, io){
 				queue.timeout = setTimeout(function(){
 					queue.kill();
 				}, (queue.list[0].duration + 15) * 1000);
-				this.send_queue();
+				that.send_queue();
 			}
 		} else if (queue.list.length == 0){
 			queue.playing = false;
