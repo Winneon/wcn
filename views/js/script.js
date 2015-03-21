@@ -66,8 +66,9 @@ $(document).ready(function(){
 	});
 
 	socket.on("dj_queue", function(data){
-		var disabled = false;
-		var children = $("table.dj tbody").children();
+		var disabled = false,
+		    children = $("table.dj tbody").children(),
+		    queue    = data.queue;
 		for (var i = 0; i < 10; i++){
 			var row      = $(children[i]).children(),
 			    name     = $(row[1]),
