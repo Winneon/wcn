@@ -178,6 +178,9 @@ io.on("connection", function(socket){
 	// Dank cookie parsing
 	if (socket.user && socket.user.indexOf("user=") > -1){
 		var parsed = socket.user.substring(socket.user.indexOf("user="), socket.user.length).replace("user=", "");
+		if (parsed.indexOf(";") > -1){
+			parsed = parsed.substring(0, parsed.indexOf(";"));
+		}
 		console.log(parsed);
 		socket.user = users.decrypt(parsed);
 		console.log("- USERNAME: " + socket.user);
