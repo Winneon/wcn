@@ -181,7 +181,6 @@ io.on("connection", function(socket){
 		if (parsed.indexOf(";") > -1){
 			parsed = parsed.substring(0, parsed.indexOf(";"));
 		}
-		console.log(parsed);
 		socket.user = users.decrypt(parsed);
 		console.log("- USERNAME: " + socket.user);
 	}
