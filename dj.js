@@ -7,10 +7,12 @@ var queue   = require("./queue.js"),
 function dJ(users, io){
 	this.send_queue = function(){
 		utils.get_sockets(io).forEach(function(sock){
-			sock.emit("dj_queue", {
-				queue: queue.list,
-				playlist: users.get_user(sock.user).playlist
-			});
+			if (sock.user){
+				sock.emit("dj_queue", {
+					queue: queue.list,
+					playlist: users.get_user(sock.user).playlist
+				});
+			}
 		});
 	};
 
