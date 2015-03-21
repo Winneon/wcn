@@ -174,10 +174,6 @@ app.get("*", function(req, res){
 io.on("connection", function(socket){
 	socket.ip = socket.request.socket.remoteAddress;
 	socket.user = socket.handshake.headers.cookie;
-	if (socket.handshake.headers.referer[socket.handshake.headers.referer.length - 1] != "/"){
-		socket.emit("redirect", socket.handshake.headers.referer + "/");
-		return;
-	}
 	console.log("NEW CONNECTION: " + socket.ip);
 	// Dank cookie parsing
 	if (socket.user && socket.user.indexOf("user=") > -1){
@@ -189,6 +185,9 @@ io.on("connection", function(socket){
 		console.log("- USERNAME: " + socket.user);
 	} else {
 		socket.user = undefined;
+	}
+	if (socket.handshake.headers.referer[socket.handshake.headers.referer.length - 1] != "/"){
+		socket.emit("redirect", socket.handshake.headers.referer + "/");
 	}
 	socket.on("disconnect", function(){
 		console.log("CLOSED CONNECTION: " + socket.ip);
