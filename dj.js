@@ -58,6 +58,7 @@ function dJ(users, io){
 		if (queue.playing){
 			queue.kill();
 			socket.emit("dj_veto", true);
+			this.send_queue();
 			console.log("DJ: VETOED REQUEST");
 			console.log("- USERNAME: " + socket.user);
 		} else {
