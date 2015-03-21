@@ -1,8 +1,8 @@
 var request = require("request");
 
 var queue   = require("./queue.js"),
+    utils   = require("./utils.js"),
     config  = require("./config.json");
-    
 
 function dJ(users){
 	this.send_queue = function(socket){
@@ -161,6 +161,20 @@ function dJ(users){
 			socket.emit("dj_add", false);
 		}
 	}
+
+	setInterval(function(){
+		if (!queue.playing){
+			if (queue.list.length > 0){
+				queue.playing = true;
+				queue.process = utils.cmd("google-chrome", [queue.list[0].link]);
+				queue.timeout = setTimeout(function(){
+					queue.kill();
+				}, (queue.list[0].duration + 15) * 1000);
+			}
+		} else if (queue.list.length == 0){
+			queue.playing = false;
+		}
+	}, 500);
 
 	return this;
 }
