@@ -1,11 +1,13 @@
 var socket = io.connect(window.location.origin),
     $content,
 	$wrap,
-	$height;
+	$height,
+	user;
 $(document).ready(function(){
 	$content = $("div.page");
 	$wrap    = $("div.wrap");
 	$height  = 0;
+	user     = $("li.user > a").html();
 
 	setTimeout(function(){
 		set_heights();
@@ -160,6 +162,9 @@ $(document).ready(function(){
 });
 
 function register_events(){
+	if (window.location.pathname == "/utils/dj/"){
+		socket.emit("dj_queue");
+	}
 	$("div.wrap button").on("click", function(event){
 		var name = $(this).attr("name");
 		if (name == "login" || name == "register"){
