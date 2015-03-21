@@ -4,11 +4,13 @@ var queue   = require("./queue.js"),
     utils   = require("./utils.js"),
     config  = require("./config.json");
 
-function dJ(users){
+function dJ(users, io){
 	this.send_queue = function(socket){
-		socket.emit("dj_queue", {
-			queue: queue.list,
-			playlist: users.get_user(socket.user).playlist
+		io.sockets.clients().forEach(function(sock){
+			sock.emit("dj_queue", {
+				queue: queue.list,
+				playlist: users.get_user(socket.user).playlist
+			});
 		});
 	};
 

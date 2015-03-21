@@ -68,6 +68,9 @@ $(document).ready(function(){
 	});
 
 	socket.on("dj_queue", function(data){
+		if (window.location.pathname != "/utils/dj/"){
+			return;
+		}
 		var disabled = false,
 		    children = $("table.dj tbody").children(),
 		    queue    = data.queue;

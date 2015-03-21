@@ -12,14 +12,14 @@ const express  = require("express"),
 
 const utils    = require("./utils.js"),
       users    = require("./users.js"),
-      dj       = require("./dj.js")(users),
       config   = require("./config.json"),
       welcome  = "WCN // VERSION " + config.version;
 
 const app      = express(),
       http     = http_mod.Server(app),
       router   = express.Router(),
-      io       = socketio(http);
+      io       = socketio(http),
+      dj       = require("./dj.js")(users, io),
 
 console.log_copy = console.log.bind(console);
 console.log = function(data){
