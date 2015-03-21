@@ -19,7 +19,7 @@ const app      = express(),
       http     = http_mod.Server(app),
       router   = express.Router(),
       io       = socketio(http),
-      dj       = require("./dj.js")(users, io),
+      dj       = require("./dj.js")(users, io);
 
 console.log_copy = console.log.bind(console);
 console.log = function(data){
