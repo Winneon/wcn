@@ -112,6 +112,7 @@ $(document).ready(function(){
 			}
 		}
 		$("input[name='add_song']").prop("disabled", disabled);
+		set_heights();
 	});
 
 	socket.on("dj_add", function(success){
