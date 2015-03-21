@@ -177,7 +177,9 @@ io.on("connection", function(socket){
 	console.log("NEW CONNECTION: " + socket.ip);
 	// Dank cookie parsing
 	if (socket.user && socket.user.indexOf("user=") > -1){
-		socket.user = users.decrypt(socket.user.substring(socket.user.indexOf("user="), socket.user.length).replace("user=", ""));
+		var parsed = socket.user.substring(socket.user.indexOf("user="), socket.user.length).replace("user=", "");
+		console.log(parsed);
+		socket.user = users.decrypt(parsed);
 		console.log("- USERNAME: " + socket.user);
 	}
 	socket.on("disconnect", function(){
