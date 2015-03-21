@@ -173,8 +173,8 @@ function dJ(users, io){
 				queue.process = utils.cmd("google-chrome", [queue.list[0].link]);
 				queue.timeout = setTimeout(function(){
 					queue.kill();
+					that.send_queue();
 				}, (queue.list[0].duration + 15) * 1000);
-				that.send_queue();
 			}
 		} else if (queue.list.length == 0){
 			queue.playing = false;
