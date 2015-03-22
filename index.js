@@ -186,7 +186,7 @@ io.on("connection", function(socket){
 	} else {
 		socket.user = undefined;
 	}
-	if (socket.handshake.headers.referer[socket.handshake.headers.referer.length - 1] != "/"){
+	if (socket.handshake.headers.referer && socket.handshake.headers.referer[socket.handshake.headers.referer.length - 1] != "/"){
 		socket.emit("redirect", socket.handshake.headers.referer + "/");
 	}
 	socket.on("disconnect", function(){
