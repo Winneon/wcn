@@ -112,7 +112,7 @@ function Router(router, app, users, dj){
 					});
 					break;
 				case "add":
-					dj.add_song(false, undefined, req.body.data.link req, res);
+					dj.add_song(false, undefined, req.body.data.link, req, res);
 					break;
 				case "remove":
 					dj.remove_song(false, undefined, req, res);
