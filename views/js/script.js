@@ -88,7 +88,7 @@ $(document).ready(function(){
 				var sec_num = parseInt(queue[i].duration, 10),
 				    hours   = Math.floor(sec_num / 3600),
 				    mins    = Math.floor((sec_num - (hours * 3600)) / 60),
-				    secs    = sec_num - (hours * 3600) - (minutes * 60),
+				    secs    = sec_num - (hours * 3600) - (mins * 60),
 				    full    = "";
 
 				if (hours > 1){
