@@ -6,16 +6,7 @@ var queue   = require("./queue.js"),
 
 function dJ(users, io){
 	this.send_queue = function(type, req, res){
-		if (type){
-			utils.get_sockets(io).forEach(function(sock){
-				if (sock.user){
-					sock.emit("dj_queue", {
-						queue: queue.list,
-						playlist: users.get_user(sock.user).playlist
-					});
-				}
-			});
-		} else {
+		if (!type){
 			res.json({
 				type: "refresh",
 				data: {
@@ -24,6 +15,14 @@ function dJ(users, io){
 				}
 			});
 		}
+		utils.get_sockets(io).forEach(function(sock){
+			if (sock.user){
+				sock.emit("dj_queue", {
+					queue: queue.list,
+					playlist: users.get_user(sock.user).playlist
+				});
+			}
+		});
 	};
 
 	this.add_song = function(type, socket, link, req, res){
