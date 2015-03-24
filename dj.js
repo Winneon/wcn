@@ -5,66 +5,131 @@ var queue   = require("./queue.js"),
     config  = require("./config.json");
 
 function dJ(users, io){
-	this.send_queue = function(){
-		utils.get_sockets(io).forEach(function(sock){
-			if (sock.user){
-				sock.emit("dj_queue", {
+	this.send_queue = function(type, req, res){
+		if (type){
+			utils.get_sockets(io).forEach(function(sock){
+				if (sock.user){
+					sock.emit("dj_queue", {
+						queue: queue.list,
+						playlist: users.get_user(sock.user).playlist
+					});
+				}
+			});
+		} else {
+			res.json({
+				type: "refresh",
+				data: {
 					queue: queue.list,
-					playlist: users.get_user(sock.user).playlist
-				});
-			}
-		});
+					playlist: users.get_user(req.cookies.user).playlist
+				}
+			});
+		}
 	};
 
-	this.add_song = function(socket, link){
+	this.add_song = function(type, socket, link, req, res){
 		if (link.indexOf("youtu.be") > -1 || link.indexOf("youtube.com") > -1){
 			this.get_youtube_data(link, function(success, title, permalink, duration, thumb){
-				data_callback(socket, success, title, permalink, duration, thumb);
+				data_callback(socket, success, title, permalink, duration, thumb, req, res);
 			});
 		} else if (link.indexOf("soundcloud.com") > -1){
 			this.get_soundcloud_data(link, function(success, title, permalink, duration, thumb){
-				data_callback(socket, success, title, permalink, duration, thumb);
+				data_callback(socket, success, title, permalink, duration, thumb, req, res);
 			});
 		} else {
-			socket.emit("dj_add", false);
+			if (type){
+				socket.emit("dj_add", false);
+			} else {
+				res.json({
+					type: "message",
+					data: {
+						error: true,
+						message: "You have entered an invalid link!"
+					}
+				});
+			}
 		}
 	};
 
-	this.remove_song = function(socket){
-		if (queue.get_request(socket.user)){
-			if (queue.list[0] == queue.get_request(socket.user)){
+	this.remove_song = function(type, socket, req, res){
+		var user = type ? socket.user : req.body.data.username;
+		if (queue.get_request(user)){
+			if (queue.list[0] == queue.get_request(user)){
 				queue.kill();
 			} else {
-				queue.rem_request(socket.user);
+				queue.rem_request(user);
 			}
-			socket.emit("dj_remove", true);
-			this.send_queue();
+			if (type){
+				socket.emit("dj_remove", true);
+				this.send_queue(true);
+			} else {
+				this.send_queue(false, req, res);
+			}
 			console.log("DJ: REMOVED REQUEST");
-			console.log("- USERNAME: " + socket.user);
+			console.log("- USERNAME: " + user);
 		} else {
-			socket.emit("dj_remove", false);
+			if (type){
+				socket.emit("dj_remove", false);
+			} else {
+				res.json({
+					type: "message",
+					data: {
+						error: true,
+						message: "You have yet to request a song to drop!"
+					}
+				});
+			}
 		}
 	};
 
-	this.remove_playlist = function(socket, link){
-		if (users.remove_request_playlist(socket.user, link)){
-			socket.emit("dj_remove_playlist", true);
+	this.remove_playlist = function(type, socket, link, req, res){
+		var user = type ? socket.user : req.body.data.username;
+		if (users.remove_request_playlist(user, link)){
+			if (type){
+				socket.emit("dj_remove_playlist", true);
+			} else {
+				this.send_queue(false, req, res);
+			}
 			console.log("DJ: REMOVED REQUEST FROM PLAYLIST");
-			console.log("- USERNAME: " + socket.user);
+			console.log("- USERNAME: " + user);
 		} else {
-			socket.emit("dj_remove_playlist", false);
+			if (type){
+				socket.emit("dj_remove_playlist", false);
+			} else {
+				res.json({
+					type: "message",
+					data: {
+						error: true,
+						message: "Failed to remove your request from your playlist!"
+					}
+				});
+			}
 		}
 	};
 
-	this.veto_song = function(socket){
+	this.veto_song = function(type, socket, req, res){
+		var user = type ? socket.user : req.body.data.username;
 		if (queue.playing){
 			queue.kill();
-			socket.emit("dj_veto", true);
-			this.send_queue();
+			if (type){
+				socket.emit("dj_veto", true);
+				this.send_queue(true);
+			} else {
+				this.send_queue(false, req, res);
+			}
 			console.log("DJ: VETOED REQUEST");
-			console.log("- USERNAME: " + socket.user);
+			console.log("- USERNAME: " + user);
 		} else {
-			socket.emit("dj_veto", false);
+			if (type){
+				socket.emit("dj_veto", false);
+			} else {
+				res.json({
+					type: "message",
+					data: {
+						error: true,
+						message: "There is nothing playing at the moment!"
+					}
+				});
+			}
 		}
 	};
 
@@ -145,25 +210,50 @@ function dJ(users, io){
 		});
 	};
 
-	function data_callback(socket, success, title, permalink, duration, thumb){
+	function data_callback(type, socket, success, title, permalink, duration, thumb, req, res){
+		var user = type ? socket.user : req.body.data.username;
 		if (success){
-			if (queue.get_request(socket.user)){
-				users.add_request_playlist(title, permalink, duration, socket.user, thumb);
-				socket.emit("dj_add", false);
+			if (queue.get_request(user)){
+				users.add_request_playlist(title, permalink, duration, user, thumb);
+				if (type){
+					socket.emit("dj_add", false);
+				} else {
+					res.json({
+						type: "message",
+						data: {
+							error: true,
+							message: "You have already requested a song! Added your request to your personal playlist."
+						}
+					});
+				}
 			} else {
-				if (users.get_user(socket.user).playlist.length > 0){
-					if (users.get_user(socket.user).playlist[0].link == permalink){
-						users.remove_request_playlist(socket.user, permalink);
+				if (users.get_user(user).playlist.length > 0){
+					if (users.get_user(user).playlist[0].link == permalink){
+						users.remove_request_playlist(user, permalink);
 					}
 				}
-				queue.add_request(title, permalink, duration, socket.user, thumb);
-				socket.emit("dj_add", true);
-				this.send_queue();
+				queue.add_request(title, permalink, duration, user, thumb);
+				if (type){
+					socket.emit("dj_add", true);
+					this.send_queue(true);
+				} else {
+					this.send_queue(false, req, res);
+				}
 				console.log("DJ: NEW REQUEST");
-				console.log("- USERNAME: " + socket.user);
+				console.log("- USERNAME: " + user);
 			}
 		} else {
-			socket.emit("dj_add", false);
+			if (type){
+				socket.emit("dj_add", false);
+			} else {
+				res.json({
+					type: "message",
+					data: {
+						error: true,
+						message: "There was an error parsing your link!"
+					}
+				});
+			}
 		}
 	}
 
@@ -176,7 +266,7 @@ function dJ(users, io){
 				queue.process = utils.cmd("google-chrome", [queue.list[0].link]);
 				queue.timeout = setTimeout(function(){
 					queue.kill();
-					that.send_queue();
+					that.send_queue(false);
 				}, (queue.list[0].duration + 15) * 1000);
 			}
 		} else if (queue.list.length == 0){

@@ -47,73 +47,8 @@ app.use(express.static(app.get("views")));
 app.use(parser.json());
 app.use(cookie());
 
-router.use(function(req, res, next){
-	utils.set_headers(res);
-	if (req.cookies.user && users.get_user(req.cookies.user)){
-		res.clearCookie("user");
-		res.redirect("/login/");
-	} else {
-		if (req.cookies.user){
-			try {
-				req.cookies.user = users.decrypt(req.cookies.user);
-			} catch (e){
-				res.clearCookie("user");
-				req.cookies.user = undefined;
-			}
-		}
-	}
-	try {
-		next();
-	} catch (e) {
-		console.log("ERROR: HTTP REQUEST");
-		console.log(e.stack());
-		res.end();
-	}
-});
-
-router.post("/api/register_code/", function(req, res){
-	console.log("test");
-	if (req.body.check == config.check){
-		req.body.uuid = req.body.uuid.replace(/-/g, "");
-		request({
-			url: "https://sessionserver.mojang.com/session/minecraft/profile/" + req.body.uuid,
-			json: true
-		}, function(error, response, data){
-			if (!error && response.statusCode == 200){
-				users.register_code({
-					username: data.name,
-					code: req.body.id,
-					staff: req.body.staff
-				});
-				console.log("NEW CODE REGISTERED");
-				console.log("- USERNAME: " + data.name);
-				console.log("- CODE: " + req.body.id);
-				res.json({
-					success: true
-				});
-			} else {
-				console.log("ERROR REGISTERING CODE");
-				res.json({
-					success: false
-				});
-			}
-		});
-	} else {
-		res.json({
-			success: false
-		});
-	}
-});
-
-// dJ GET and POST requests
-
-router.get("/api/dj/queue/", function(req, res){
-	if (users.get_user(req.body.client_id)){
-
-	}
-});
-
-app.use(router);
+// Register external API events
+require("./router.js")(router, app, users, dj);
 
 app.use(function(req, res, next){
 	res.locals.basedir = app.get("views");
@@ -228,23 +163,23 @@ io.on("connection", function(socket){
 	});
 	socket.on("dj_queue", function(){
 		if (socket.user){
-			dj.send_queue();
+			dj.send_queue(true);
 		}
 	});
 	socket.on("dj_add", function(link){
 		if (socket.user){
-			dj.add_song(socket, link);
+			dj.add_song(true, socket, link);
 		}
 	});
 	socket.on("dj_remove", function(){
 		if (socket.user){
-			dj.remove_song(socket);
+			dj.remove_song(true, socket);
 		}
 	});
 	socket.on("dj_veto", function(){
 		if (socket.user){
 			if (users.get_user(socket.user).staff){
-				dj.veto_song(socket);
+				dj.veto_song(true, socket);
 			} else {
 				socket.emit("dj_veto", false);
 			}
