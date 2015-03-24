@@ -86,7 +86,7 @@ $(document).ready(function(){
 				}).html(queue[i].title));
 				username.html(queue[i].user);
 				var mins  = Math.floor(queue[i].duration / 60),
-				    hours = queue[i].duration / 60 / 60;
+				    hours = Math.floor(queue[i].duration / 60 / 60);
 				    secs  = queue[i].duration % 60,
 				    full  = "";
 				if (secs < 10){
