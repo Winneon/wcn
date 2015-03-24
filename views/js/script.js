@@ -85,15 +85,20 @@ $(document).ready(function(){
 					"target": "_blank"
 				}).html(queue[i].title));
 				username.html(queue[i].user);
-				var mins  = Math.floor(queue[i].duration / 60),
-				    hours = Math.floor(queue[i].duration / 60 / 60);
-				    secs  = queue[i].duration % 60,
-				    full  = "";
+				var sec_num = parseInt(queue[i].duration, 10),
+				    hours   = Math.floor(sec_num / 3600),
+				    mins    = Math.floor((sec_num - (hours * 3600)) / 60),
+				    secs    = sec_num - (hours * 3600) - (minutes * 60),
+				    full    = "";
+
+				if (hours > 1){
+					full += hours + ":";
+				}
+				if (mins < 10){
+					mins = "0" + mins;
+				}
 				if (secs < 10){
 					secs = "0" + secs;
-				}
-				if (hours >= 1){
-					full += hours + ":";
 				}
 				duration.html(full + [mins, secs].join(":"));
 				if (queue[i].user == user){
