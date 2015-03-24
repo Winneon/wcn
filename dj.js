@@ -29,11 +29,11 @@ function dJ(users, io){
 	this.add_song = function(type, socket, link, req, res){
 		if (link.indexOf("youtu.be") > -1 || link.indexOf("youtube.com") > -1){
 			this.get_youtube_data(link, function(success, title, permalink, duration, thumb){
-				data_callback(socket, success, title, permalink, duration, thumb, req, res);
+				data_callback(type, socket, success, title, permalink, duration, thumb, req, res);
 			});
 		} else if (link.indexOf("soundcloud.com") > -1){
 			this.get_soundcloud_data(link, function(success, title, permalink, duration, thumb){
-				data_callback(socket, success, title, permalink, duration, thumb, req, res);
+				data_callback(type, socket, success, title, permalink, duration, thumb, req, res);
 			});
 		} else {
 			if (type){
