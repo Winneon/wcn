@@ -20,7 +20,7 @@ function dJ(users, io){
 				type: "refresh",
 				data: {
 					queue: queue.list,
-					playlist: users.get_user(req.cookies.user).playlist
+					playlist: users.get_user(req.body.data.username).playlist
 				}
 			});
 		}
