@@ -100,6 +100,15 @@ function Router(router, app, users, dj){
 					});
 					return;
 				}
+			} else {
+				res.json({
+					type: "message",
+					data: {
+						error: true,
+						message: "You did not provide valid login credentials!"
+					}
+				});
+				return;
 			}
 			switch (req.body.type){
 				default:
